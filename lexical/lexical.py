@@ -111,9 +111,13 @@ class lexeical:
                 token.append(self.isChar())   
             elif self.current_char == '"':
                 token.append(self.isString())
+            
+            elif self.current_char == '#':  # checking whether comment is single line or multi line comment
+                token.append(self.CommentChecker())
+
             elif self.current_char in re.finadall('\d',self.current_char):
                 token.append(self.isNum())
-            elif self.current_char in Compound:
+            elif self.current_char in Compound: 
                 token.append(self.isCompound())
                 self.next_pos()    
             elif self.current_char in Plus_Minus:
@@ -177,6 +181,60 @@ class lexeical:
         return token('String', string, self.position.line+1)
 
     def isChar(self):
+        pass
+
+
+    def commentChecker(self):   #method checking whether comment is single line or multi line comment
+        
+        self.next_pos()
+
+        if self.current_char != '$':
+            #single line comment method
+            a = open(
+                r'./token,txt','a'
+            )
+            singleCommentStr = ''
+            position_start = self.position.duplicate()
+            
+            while self.current_char != None and self.current_char != "\n":
+
+                singleCommentStr += self.current_char
+                self.next_pos()
+                        
+            self.next_pos()
+            f.write(f'(Single line comment,{singleCommentStr},{self.position.line+1})\n')
+            return token('Single line comment', singleCommentStr, self.position.line+1)
+
+        else:
+            #multi line comment method
+            a = open(
+                r'./token,txt','a'
+            )
+            multiCommentStr = ''
+            position_start = self.position.duplicate()
+            
+            self.next_pos()
+
+            while self.current_char != None:
+                if self.current_char == "$":
+                    self.next_pos()
+                    if self.current_char == "#": #  #$ $#
+                        break
+
+                    else:
+                        multiCommentStr = multiCommentStr + '$' + self.current_char
+                        self.next_pos()
+                        continue
+
+                else:
+                    multiCommentStr += self.current_char
+                    self.next_pos()
+                        
+            self.next_pos()
+            f.write(f'(Multi line comment,{multiCommentStr},{self.position.line+1})\n')
+            return token('Multi line comment', multiCommentStr, self.position.line+1)
+
+# //new
 
 
 
