@@ -234,7 +234,7 @@ class lexeical:
             f.write(f'(Multi line comment,{multiCommentStr},{self.position.line+1})\n')
             return token('Multi line comment', multiCommentStr, self.position.line+1)
 
-# //new this
+# where is the next piece of code Faiz?
 
 
 
